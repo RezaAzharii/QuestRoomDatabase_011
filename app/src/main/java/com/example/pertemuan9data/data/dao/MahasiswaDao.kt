@@ -22,4 +22,7 @@ interface MahasiswaDao {
     //Fungsi menghapus data tertentu pada tabel Mahasiswa
     @Delete
     suspend fun deleteMahasiswa(mahasiswa: Mahasiswa)
+    //Fungsi untuk mnegupdate/mengubah data yang sudah ada pada tabel mahasiswa
+    @Update
+    suspend fun updateMahasiwa(mahasiswa: Mahasiswa)
 }
