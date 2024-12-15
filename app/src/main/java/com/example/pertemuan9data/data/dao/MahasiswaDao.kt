@@ -16,5 +16,9 @@ interface MahasiswaDao {
     //Fungsi mengambil semua data pada tabel Mahasiswa
     @Query("SELECT * FROM mahasiswa ORDER BY nama ASC")
     fun getAllMahasiswa(): Flow<List<Mahasiswa>>
+    //Fungsi mengambil data pada tabel Mahasiswa berdasarkan Nim
+    @Query("SELECT * FROM mahasiswa WHERE nim = :nim")
+    fun getMahasiswa(nim: String) : Flow<Mahasiswa>
+    //Fungsi menghapus data tertentu pada tabel Mahasiswa
 
 }
