@@ -135,7 +135,7 @@ fun BodyHomeMhsView(
                         it
                     )
                 },
-                modifier = modifier
+                modifier = Modifier.padding(top = 100.dp)
             )
         }
     }

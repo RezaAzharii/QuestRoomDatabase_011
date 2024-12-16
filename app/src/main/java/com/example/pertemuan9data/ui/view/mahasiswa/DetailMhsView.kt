@@ -43,34 +43,30 @@ import com.example.pertemuan9data.ui.viewmodel.toMahasiswaEntity
 fun DetailMhsView(
     modifier: Modifier = Modifier,
     viewModel: DetailMhsViewModel = viewModel(factory = PenyediaViewModel.Factory),
-    onBack: () -> Unit = { },
-    onEditClick: (String) -> Unit = { },
-    onDeleteClick: () -> Unit = { }
+    onBack: () -> Unit = {},
+    onEditClick: (String) -> Unit = {},
+    onDeleteClick: () -> Unit = {}
 ){
-    Scaffold (
-        topBar = {
-            TopAppBar(
-                judul = "Detail Mahasiswa",
-                showBackButton = true,
-                onBack = onBack,
-                modifier = modifier
-            )
-        },
+    Scaffold (topBar = {
+        TopAppBar(
+            judul = "Detail Mahasiswa",
+            showBackButton = true,
+            onBack = onBack
+        )
+    },
         floatingActionButton = {
             FloatingActionButton(
-                onClick = {
-                    onEditClick(viewModel.detailUiEvent.value.detailUiEvent.nim) },
+                onClick = {onEditClick(viewModel.detailUiState.value.detailUiEvent.nim)},
                 shape = MaterialTheme.shapes.medium,
                 modifier = Modifier.padding(16.dp)
             ) {
                 Icon(
                     imageVector = Icons.Default.Edit,
-                    contentDescription = "Edit Mahasiswa",
-                )
+                    contentDescription = "Edit Mahasiswa")
             }
-        }
-    ){ innerPadding ->
-        val detailUiState by viewModel.detailUiEvent.collectAsState()
+        }){
+            innerPadding ->
+        val detailUiState by viewModel.detailUiState.collectAsState()
 
         BodyDetailMhs(
             modifier = Modifier.padding(innerPadding),
@@ -87,46 +83,44 @@ fun DetailMhsView(
 fun BodyDetailMhs(
     modifier: Modifier = Modifier,
     detailUiState: DetailUiState = DetailUiState(),
-    onDeleteClick: () -> Unit = { }
+    onDeleteClick: () -> Unit = {}
 ){
     var deleteConfirmationRequired by rememberSaveable { mutableStateOf(false) }
-    when {
+    when{
         detailUiState.isLoading -> {
             Box(
                 modifier = modifier.fillMaxSize(),
                 contentAlignment = Alignment.Center
             ){
-                CircularProgressIndicator()//Tampilan Loading
+                //add loading
+                CircularProgressIndicator()
             }
         }
 
         detailUiState.isUiEventNotEmpty -> {
-            Column (
-                modifier = modifier
-                    .fillMaxWidth()
-                    .padding(16.dp)
-            ){
+            Column (modifier = modifier.fillMaxWidth().padding(16.dp))
+            {
                 ItemDetailMhs(
                     mahasiswa = detailUiState.detailUiEvent.toMahasiswaEntity(),
                     modifier = Modifier
                 )
-                Spacer(modifier = Modifier.padding(8.dp))
-                Button(
-                    onClick = {
-                        deleteConfirmationRequired = true
-                    },
-                    modifier = Modifier.fillMaxWidth()
-                ) {
-                    Text(text = "Delete")
+                Spacer(modifier =  Modifier.padding(8.dp))
+                Button(onClick = {
+                    deleteConfirmationRequired = true
+                }, modifier = Modifier.fillMaxWidth())
+                {
+                    Text(text = "Delete", fontSize = 18.sp)
                 }
-                if (deleteConfirmationRequired){
+
+                if (deleteConfirmationRequired) {
                     DeleteConfirmationDialog(
                         onDeleteConfirm = {
                             deleteConfirmationRequired = false
                             onDeleteClick()
                         },
-                        onDeleteCancel = {deleteConfirmationRequired = false},
-                        modifier = Modifier.padding(8.dp)
+                        onDeleteCancel =  {
+                            deleteConfirmationRequired = false
+                        }, modifier = Modifier.padding(8.dp)
                     )
                 }
             }
@@ -139,7 +133,7 @@ fun BodyDetailMhs(
             ){
                 Text(
                     text = "Data tidak ditemukan",
-                    modifier = modifier.padding(16.dp)
+                    modifier = Modifier.padding(16.dp)
                 )
             }
         }
@@ -151,42 +145,40 @@ fun ItemDetailMhs(
     modifier: Modifier = Modifier,
     mahasiswa: Mahasiswa
 ){
-    Card (
-        modifier = modifier.fillMaxWidth(),
+    Card(
+        modifier = modifier.fillMaxWidth().padding(top = 20.dp),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.primaryContainer,
             contentColor = MaterialTheme.colorScheme.onPrimaryContainer
         )
-    ){
-        Column (
-            modifier = Modifier.padding(16.dp)
-        ){
+    ) {
+        Column(modifier = Modifier.padding(16.dp)
+        ) {
             ComponentDetailMhs(judul = "NIM", isinya = mahasiswa.nim)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Spacer(modifier =Modifier.padding(5.dp))
             ComponentDetailMhs(judul = "Nama", isinya = mahasiswa.nama)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Spacer(modifier =Modifier.padding(5.dp))
             ComponentDetailMhs(judul = "Alamat", isinya = mahasiswa.alamat)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Spacer(modifier =Modifier.padding(5.dp))
             ComponentDetailMhs(judul = "Jenis Kelamin", isinya = mahasiswa.jenisKelamin)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Spacer(modifier =Modifier.padding(5.dp))
             ComponentDetailMhs(judul = "Kelas", isinya = mahasiswa.kelas)
-            Spacer(modifier = Modifier.padding(4.dp))
+            Spacer(modifier =Modifier.padding(5.dp))
             ComponentDetailMhs(judul = "Angkatan", isinya = mahasiswa.angkatan)
-            Spacer(modifier = Modifier.padding(4.dp))
+
         }
     }
 }
 
 @Composable
 fun ComponentDetailMhs(
-    modifier: Modifier = Modifier,
+    modifier: Modifier =Modifier,
     judul: String,
     isinya: String,
 ){
-    Column (
-        modifier = modifier.fillMaxWidth(),
-        horizontalAlignment = Alignment.Start
-    ){
+    Column(modifier =modifier.fillMaxWidth(),
+        horizontalAlignment = Alignment.Start)
+    {
         Text(
             text = "$judul : ",
             fontSize = 20.sp,
@@ -194,11 +186,13 @@ fun ComponentDetailMhs(
             color = Color.Gray
         )
         Text(
-            text = isinya, fontSize = 20.sp,
+            text = isinya,
+            fontSize = 20.sp,
             fontWeight = FontWeight.Bold
         )
     }
 }
+
 
 @Composable
 private fun DeleteConfirmationDialog(
@@ -206,9 +200,9 @@ private fun DeleteConfirmationDialog(
     onDeleteCancel: () -> Unit,
     modifier: Modifier = Modifier
 ){
-    AlertDialog(onDismissRequest = { },
+    AlertDialog(onDismissRequest = {},
         title = { Text("Delete Data")},
-        text = { Text("Apakah anda yakin ingin menghapus data?") },
+        text = { Text("Apakah anda yakin ingin menghapus data?")},
         modifier = modifier,
         dismissButton = {
             TextButton(onClick = onDeleteCancel) {
@@ -216,7 +210,7 @@ private fun DeleteConfirmationDialog(
             }
         },
         confirmButton = {
-            TextButton (onClick = onDeleteConfirm){
+            TextButton(onClick = onDeleteConfirm) {
                 Text(text = "Yes")
             }
         }

@@ -29,7 +29,7 @@ fun PengelolaHalaman (
                 onDetailClick = { nim ->
                     navController.navigate("${DestinasiDetail.route}/$nim")
                     println(
-                        "PenegelolaHalaman: nim = $nim"
+                        "PengelolaHalaman: nim = $nim"
                     )
                 },
                 onAddMhs = {
